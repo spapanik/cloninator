@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 ### Added
 
 - Added a command to clone the repos from the config
+- Added a command to generate config from the existing repos
 
 
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
