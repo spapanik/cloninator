@@ -12,8 +12,8 @@ Long project description and tldr goes here
 
 ## Links
 
-- [Documentation]
-- [Changelog]
+-   [Documentation]
+-   [Changelog]
 
 [test_badge]: https://github.com/spapanik/cloninator/actions/workflows/tests.yml/badge.svg
 [test_url]: https://github.com/spapanik/cloninator/actions/workflows/tests.yml
@@ -31,4 +31,3 @@ Long project description and tldr goes here
 [ruff_url]: https://github.com/charliermarsh/ruff
 [Documentation]: https://cloninator.readthedocs.io/en/stable/
 [Changelog]: https://github.com/spapanik/cloninator/blob/main/docs/CHANGELOG.md
-
