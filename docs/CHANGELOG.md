@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Added
+
+-   Added a cli flag to print the version
+
 ## [0.1.0] - 2024-03-22
 
 ### Added

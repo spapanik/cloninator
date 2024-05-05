@@ -1,11 +1,19 @@
 from argparse import ArgumentParser
 
+from cloninator.__version__ import __version__
 from cloninator.clone import clone
 from cloninator.generate import generate
 
 
 def get_parser() -> ArgumentParser:
     parser = ArgumentParser()
+    parser.add_argument(
+        "-V",
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
+        help="print the version and exit",
+    )
     usage = parser.add_mutually_exclusive_group(required=True)
     usage.add_argument("--clone", action="store_true")
     usage.add_argument("--generate", action="store_true")
