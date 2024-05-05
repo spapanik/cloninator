@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 ### Added
 
 -   Added a cli flag to print the version
+-   Added a cli flag to control verbosity
 
 ### Changed
 
