@@ -1,4 +1,4 @@
-# cloninator: A cli tool to clone your repos
+# cloninator: A cli tool to manage your repos
 
 [![tests][test_badge]][test_url]
 [![license][licence_badge]][licence_url]
@@ -8,7 +8,10 @@
 [![build automation: yam][yam_badge]][yam_url]
 [![Lint: ruff][ruff_badge]][ruff_url]
 
-Long project description and tldr goes here
+`cloninator` is a command-line tool that enables you to clone all your repositories based
+on a configuration file. This configuration file is located at `~/.config/cloninator/config.yaml`.
+If you need to split the configuration across multiple files,
+`cloninator` can read all `yaml` files located in the `~/.config/cloninator/config.yaml.d/` directory.
 
 ## Links
 
