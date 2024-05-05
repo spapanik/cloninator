@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+## [0.1.0] - 2024-03-22
+
 ### Added
 
 -   Added a command to clone the repos from the config
