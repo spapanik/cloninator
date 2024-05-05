@@ -14,19 +14,17 @@ def get_parser() -> ArgumentParser:
         version=f"%(prog)s {__version__}",
         help="print the version and exit",
     )
-    usage = parser.add_mutually_exclusive_group(required=True)
-    usage.add_argument("--clone", action="store_true")
-    usage.add_argument("--generate", action="store_true")
+    subparsers = parser.add_subparsers(dest="subcommand", required=True)
+    subparsers.add_parser("clone", help="clone a repository")
+    subparsers.add_parser("generate", help="generate a repository")
 
     return parser
 
 
 def main() -> None:
     args = get_parser().parse_args()
-    if args.clone:
-        clone()
-    elif args.generate:
-        generate()
-    else:
-        msg = "Invalid usage"
-        raise ValueError(msg)
+    match args.subcommand:
+        case "clone":
+            clone()
+        case "generate":
+            generate()

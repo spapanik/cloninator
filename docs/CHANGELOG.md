@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 -   Added a cli flag to print the version
 
+### Changed
+
+-   Changed subcommands to be passed without the double dash
+
 ## [0.1.0] - 2024-03-22
 
 ### Added
