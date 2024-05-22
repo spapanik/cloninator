@@ -3,7 +3,7 @@ from typing import Any
 
 from yaml import safe_dump
 
-from cloninator.utils import get_config, get_repos
+from cloninator.lib.utils import get_config, get_repos
 
 
 def generate() -> None:

@@ -1,6 +1,6 @@
 from subprocess import run
 
-from cloninator.utils import Repo, get_config
+from cloninator.lib.utils import Repo, get_config
 
 
 def add_repo(repo: Repo) -> None:
