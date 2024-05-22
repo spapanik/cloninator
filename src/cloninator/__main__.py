@@ -1,8 +1,8 @@
 import sys
 
-from cloninator.clone import clone
-from cloninator.generate import generate
 from cloninator.lib.parser import parse_args
+from cloninator.subcommands.clone import clone
+from cloninator.subcommands.generate import generate
 
 sys.tracebacklimit = 0
 
