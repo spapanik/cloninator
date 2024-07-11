@@ -8,14 +8,14 @@ def add_repo(repo: Repo) -> None:
     path.mkdir(parents=True, exist_ok=True)
     origin = repo.remotes[0]
     print(f"🟢 Cloning {origin.url} at {path}...")
-    run(
-        ["git", "clone", origin.url, path, "--origin", origin.name],  # noqa: S603, S607
+    run(  # noqa: S603
+        ["git", "clone", origin.url, path, "--origin", origin.name],  # noqa: S607
         check=True,
     )
     for remote in repo.remotes[1:]:
         print(f"🟢 Adding remote {remote.name} at {remote.url} for {path}...")
-        run(
-            [  # noqa: S603, S607
+        run(  # noqa: S603
+            [  # noqa: S607
                 "git",
                 "-C",
                 path,
