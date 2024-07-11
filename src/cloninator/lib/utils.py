@@ -95,8 +95,8 @@ def get_repos(root: Path | None = None) -> Config:
     repos = set()
     for git_dir in root.rglob(".git/"):
         path = git_dir.parent
-        response = run(
-            [  # noqa: S603, S607
+        response = run(  # noqa: S603
+            [  # noqa: S607
                 "git",
                 "-C",
                 path,
