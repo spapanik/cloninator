@@ -20,7 +20,7 @@ If you need to split the configuration across multiple files,
 
 [test_badge]: https://github.com/spapanik/cloninator/actions/workflows/tests.yml/badge.svg
 [test_url]: https://github.com/spapanik/cloninator/actions/workflows/tests.yml
-[licence_badge]: https://img.shields.io/badge/License-LGPL_v3-blue.svg
+[licence_badge]: https://img.shields.io/pypi/l/cloninator
 [licence_url]: https://github.com/spapanik/cloninator/blob/main/docs/LICENSE.md
 [pypi_badge]: https://img.shields.io/pypi/v/cloninator
 [pypi_url]: https://pypi.org/project/cloninator
