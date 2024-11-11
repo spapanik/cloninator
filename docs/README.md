@@ -1,5 +1,7 @@
 # cloninator: A cli tool to manage your repos
 
+[![build][build_badge]][build_url]
+[![lint][lint_badge]][lint_url]
 [![tests][test_badge]][test_url]
 [![license][licence_badge]][licence_url]
 [![pypi][pypi_badge]][pypi_url]
@@ -18,6 +20,10 @@ If you need to split the configuration across multiple files,
 -   [Documentation]
 -   [Changelog]
 
+[build_badge]: https://github.com/spapanik/cloninator/actions/workflows/build.yml/badge.svg
+[build_url]: https://github.com/spapanik/cloninator/actions/workflows/build.yml
+[lint_badge]: https://github.com/spapanik/cloninator/actions/workflows/lint.yml/badge.svg
+[lint_url]: https://github.com/spapanik/cloninator/actions/workflows/lint.yml
 [test_badge]: https://github.com/spapanik/cloninator/actions/workflows/tests.yml/badge.svg
 [test_url]: https://github.com/spapanik/cloninator/actions/workflows/tests.yml
 [licence_badge]: https://img.shields.io/pypi/l/cloninator
