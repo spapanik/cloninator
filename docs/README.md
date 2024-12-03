@@ -27,7 +27,7 @@ If you need to split the configuration across multiple files,
 [test_badge]: https://github.com/spapanik/cloninator/actions/workflows/tests.yml/badge.svg
 [test_url]: https://github.com/spapanik/cloninator/actions/workflows/tests.yml
 [licence_badge]: https://img.shields.io/pypi/l/cloninator
-[licence_url]: https://github.com/spapanik/cloninator/blob/main/docs/LICENSE.md
+[licence_url]: https://cloninator.readthedocs.io/en/stable/LICENSE/
 [pypi_badge]: https://img.shields.io/pypi/v/cloninator
 [pypi_url]: https://pypi.org/project/cloninator
 [pepy_badge]: https://pepy.tech/badge/cloninator
@@ -39,4 +39,4 @@ If you need to split the configuration across multiple files,
 [ruff_badge]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v1.json
 [ruff_url]: https://github.com/charliermarsh/ruff
 [Documentation]: https://cloninator.readthedocs.io/en/stable/
-[Changelog]: https://github.com/spapanik/cloninator/blob/main/docs/CHANGELOG.md
+[Changelog]: https://cloninator.readthedocs.io/en/stable/CHANGELOG/
