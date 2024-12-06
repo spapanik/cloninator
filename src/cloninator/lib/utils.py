@@ -1,10 +1,17 @@
-from collections.abc import Iterator
+from __future__ import annotations
+
 from dataclasses import dataclass
 from pathlib import Path
 from subprocess import run
-from typing import Any
+from typing import TYPE_CHECKING, TypeGuard
 
 from dj_settings import ConfigParser
+from pyutilkit.term import SGRString
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+    from cloninator.lib.types import RepoData
 
 CONF_DIR = Path.home().joinpath(".config", "cloninator")
 CONF = CONF_DIR.joinpath("config.yaml")
@@ -29,30 +36,63 @@ class Config:
     repos: frozenset[Repo]
 
 
-def validate_repo(path: Path, data: dict[str, Any]) -> str:
+def validate_repo(data: dict[str, object], path: Path) -> TypeGuard[RepoData]:
+    error_prefix = "❌ "
     if not all(key.startswith("/") for key in data):
-        return f"❌ Repo info for {path} has keys that don't start with /, skipping..."
+        SGRString(
+            f"Repo info for {path} has keys that don't start with /, skipping...",
+            prefix=error_prefix,
+        ).print()
+        return False
     if "/remotes" not in data:
-        return f"❌ Repo info for {path} is missing remotes info, skipping..."
+        SGRString(
+            f"Repo info for {path} is missing remotes info, skipping...",
+            prefix=error_prefix,
+        ).print()
+        return False
     if not data["/remotes"]:
-        return f"❌ Repo info for {path} has no remotes, skipping..."
+        SGRString(
+            f"Repo info for {path} has no remotes, skipping...", prefix=error_prefix
+        ).print()
+        return False
+    if not isinstance(data["/remotes"], list):
+        SGRString(
+            f"Repo info for {path} remotes are not a list, skipping...",
+            prefix=error_prefix,
+        ).print()
+        return False
     for remote in data["/remotes"]:
         if "name" not in remote:
-            return f"❌ Repo info for {path} has a remote without name, skipping..."
+            SGRString(
+                f"Repo info for {path} has a remote without name, skipping...",
+                prefix=error_prefix,
+            ).print()
+            return False
         if "url" not in remote:
-            return f"❌ Repo info for {path} has a remote without a url, skipping..."
-    return ""
+            SGRString(
+                f"Repo info for {path} has a remote without a url, skipping...",
+                prefix=error_prefix,
+            ).print()
+            return False
+    return True
 
 
-def _get_config(
-    path: Path, data: dict[str, Any]
-) -> Iterator[tuple[Path, dict[str, Any]]]:
+def _get_config(path: Path, data: dict[str, object]) -> Iterator[tuple[Path, RepoData]]:
     for key, value in data.items():
         if isinstance(value, dict):
+            if not all(isinstance(key, str) for key in value):
+                SGRString(
+                    f"Repo info for {path} has a non-string key, skipping...",
+                    prefix="❌ ",
+                ).print()
+                continue
+
+            current_path = path.joinpath(key)
             if any(key.startswith("/") for key in value):
-                yield path.joinpath(key), value
+                if validate_repo(value, path):
+                    yield current_path, value
             else:
-                yield from _get_config(path.joinpath(key), value)
+                yield from _get_config(current_path, value)
 
 
 def get_config(*, soft_info: bool = True) -> Config:
@@ -65,20 +105,14 @@ def get_config(*, soft_info: bool = True) -> Config:
 
     repos = set()
     for path, path_data in _get_config(root, data):
-        if error_message := validate_repo(path, path_data):
-            print(error_message)
-        else:
-            if soft_info:
-                post_checkout = tuple(path_data.get("/post_checkout", []))
-            else:
-                post_checkout = ()
-            repos.add(
-                Repo(
-                    path=path,
-                    remotes=tuple(Remote(**remote) for remote in path_data["/remotes"]),
-                    post_checkout=post_checkout,
-                )
+        post_checkout = tuple(path_data.get("/post_checkout", [])) if soft_info else ()
+        repos.add(
+            Repo(
+                path=path,
+                remotes=tuple(Remote(**remote) for remote in path_data["/remotes"]),
+                post_checkout=post_checkout,
             )
+        )
 
     return Config(root=root, repos=frozenset(repos))
 
@@ -112,7 +146,7 @@ def get_repos(root: Path | None = None) -> Config:
             raise ValueError(error)
         output = response.stdout.decode()
         if not output:
-            print(f"🔵 Repo {path} is local, skipping...")
+            SGRString(f"Repo {path} is local, skipping...", prefix="🔵 ").print()
             continue
         remotes_info = output.splitlines()
         remotes = []
