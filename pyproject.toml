@@ -193,12 +193,15 @@ source = [
     "src/",
 ]
 data_file = ".cov_cache/coverage.dat"
+omit = [
+    "src/cloninator/lib/types.py",
+]
 
 [tool.coverage.report]
 exclude_also = [
     "if TYPE_CHECKING:",
 ]
-fail_under = 12
+fail_under = 30
 precision = 2
 show_missing = true
 skip_covered = true

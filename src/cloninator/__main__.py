@@ -12,5 +12,5 @@ def main() -> None:
     match args.subcommand:
         case "clone":
             clone()
-        case "generate":
+        case "generate":  # pragma: no branch
             generate()
