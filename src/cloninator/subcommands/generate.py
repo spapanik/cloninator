@@ -8,7 +8,7 @@ from yaml import safe_dump
 from cloninator.lib.utils import get_config, get_repos
 
 if TYPE_CHECKING:
-    from cloninator.lib.types import DirectoryData, RepoData
+    from cloninator.lib.type_defs import DirectoryData, RepoData
 
 
 def generate() -> None:

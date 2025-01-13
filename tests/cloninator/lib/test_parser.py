@@ -2,7 +2,7 @@ from unittest import mock
 
 import pytest
 
-from cloninator.lib.parser import parse_args
+from cloninator.lib.cli import parse_args
 
 
 @pytest.mark.parametrize(

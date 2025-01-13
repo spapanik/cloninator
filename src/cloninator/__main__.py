@@ -1,6 +1,6 @@
 import sys
 
-from cloninator.lib.parser import parse_args
+from cloninator.lib.cli import parse_args
 from cloninator.subcommands.clone import clone
 from cloninator.subcommands.generate import generate
 

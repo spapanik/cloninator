@@ -154,7 +154,7 @@ source = [
 ]
 data_file = ".cov_cache/coverage.dat"
 omit = [
-    "src/cloninator/lib/types.py",
+    "src/cloninator/lib/type_defs.py",
 ]
 
 [tool.coverage.report]

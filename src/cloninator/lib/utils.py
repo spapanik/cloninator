@@ -11,7 +11,7 @@ from pyutilkit.term import SGRString
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-    from cloninator.lib.types import RepoData
+    from cloninator.lib.type_defs import RepoData
 
 CONF_DIR = Path.home().joinpath(".config", "cloninator")
 CONF = CONF_DIR.joinpath("config.yaml")
