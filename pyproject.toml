@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "phosphorus>=0.8",
+    "phosphorus>=0.9",
 ]
 build-backend = "phosphorus.construction.api"
 
@@ -43,7 +43,7 @@ documentation = "https://cloninator.readthedocs.io/en/stable/"
 [project.scripts]
 cloninator = "cloninator.__main__:main"
 
-[tool.phosphorus.dev-dependencies]
+[dependency-groups]
 dev = [
     "ipdb~=0.13",
     "ipython~=8.21",
