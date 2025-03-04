@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from yaml import safe_dump
+from ruamel.yaml import YAML
 
 from cloninator.lib.utils import get_config, get_repos
 
@@ -33,5 +33,9 @@ def generate() -> None:
             ]
         }
         current_dict[path.name] = repo_data
+    yaml = YAML()
+    yaml.default_flow_style = False
+    yaml.indent(mapping=2, sequence=4, offset=2)
+
     with Path("repos.yaml").open("w") as file:
-        safe_dump(repos_dict, file)
+        yaml.dump(repos_dict, file)
