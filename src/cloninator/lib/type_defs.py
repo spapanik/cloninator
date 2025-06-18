@@ -1,4 +1,6 @@
-from typing import Required, TypedDict, Union
+from typing import TypedDict, Union
+
+from typing_extensions import Required  # upgrade: py3.10: import from typing
 
 
 class RemoteData(TypedDict):

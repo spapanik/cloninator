@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 - Added a cli flag to print the version
 - Added a cli flag to control verbosity
+- Added python 3.10 support
 
 ### Changed
 
