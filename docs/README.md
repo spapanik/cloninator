@@ -18,8 +18,8 @@ If you need to split the configuration across multiple files,
 
 ## Links
 
--   [Documentation]
--   [Changelog]
+- [Documentation]
+- [Changelog]
 
 [build_badge]: https://github.com/spapanik/cloninator/actions/workflows/build.yml/badge.svg
 [build_url]: https://github.com/spapanik/cloninator/actions/workflows/build.yml
