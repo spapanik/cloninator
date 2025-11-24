@@ -168,7 +168,7 @@ exclude_also = [
     "raise NotImplementedError",
     "raise UnreachableCodeError",
 ]
-fail_under = 30
+fail_under = 50
 precision = 2
 show_missing = true
 skip_covered = true
