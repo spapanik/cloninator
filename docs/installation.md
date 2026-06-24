@@ -1,17 +1,42 @@
 # Installation
 
-# Using uv
+## Requirements
 
-We recommend using [uv] for the installation of `cloninator` as it provides
-an isolated environment for the package, preventing any dependency conflicts.
+- Python 3.10 or higher (Python 3.13 recommended)
 
-The minimum python version needed is `3.10` but as uv is used, version 3.13
-is preferred.
+## Recommended: Using uv
 
-To install `cloninator` using uv, run the following command in your terminal:
+We recommend using [uv](https://github.com/astral-sh/uv) for installation as it provides an isolated environment, preventing dependency conflicts.
 
-```console
-$ uv tool install --python 3.13 cloninator
+```bash
+uv tool install --python 3.13 cloninator
 ```
 
-[uv]: https://github.com/astral-sh/uv
+This installs `cloninator` as a standalone tool with its own Python environment.
+
+## Alternative Methods
+
+### Using pip
+
+```bash
+pip install cloninator
+```
+
+### From Source
+
+```bash
+git clone https://github.com/spapanik/cloninator.git
+cd cloninator
+uv sync
+uv run cloninator --help
+```
+
+## Verify Installation
+
+```bash
+cloninator --version
+```
+
+## Next Steps
+
+After installation, see the [Usage Guide](usage.md) to create your first configuration.

@@ -1,4 +1,4 @@
-# cloninator: A cli tool to manage your repos
+# cloninator: A CLI Tool to Manage Your Repos
 
 [![build][build_badge]][build_url]
 [![lint][lint_badge]][lint_url]
@@ -11,15 +11,70 @@
 [![build automation: yam][yam_badge]][yam_url]
 [![Lint: ruff][ruff_badge]][ruff_url]
 
-`cloninator` is a command-line tool that enables you to clone all your repositories based
-on a configuration file. This configuration file is located at `~/.config/cloninator/config.yaml`.
-If you need to split the configuration across multiple files,
-`cloninator` can read all `yaml` files located in the `~/.config/cloninator/config.yaml.d/` directory.
+`cloninator` is a command-line tool that manages Git repositories through YAML configuration. Define your repositories once, then clone them all with a single command. Perfect for setting up development environments across multiple machines or managing large collections of repositories.
 
-## Links
+## Features
 
-- [Documentation]
-- [Changelog]
+- **Bulk cloning**: Clone all configured repositories with one command
+- **Multiple remotes**: Automatically configure origin, upstream, and other remotes
+- **Post-checkout automation**: Run setup commands after cloning (e.g., `pip install`, `npm install`)
+- **Nested organization**: Mirror your desired directory structure in config
+- **Split configurations**: Organize configs across multiple files (personal, work, etc.)
+- **Config generation**: Scan existing repos to auto-generate configuration
+- **Idempotent**: Safe to run repeatedly; skips already-cloned repos
+
+## Quick Start
+
+### 1. Install
+
+```bash
+uv tool install --python 3.13 cloninator
+```
+
+### 2. Configure
+
+Create `~/.config/cloninator/config.yaml`:
+
+```yaml
+/root: ~/projects
+
+personal:
+  myproject:
+    /remotes:
+      - name: origin
+        url: git@github.com:user/myproject.git
+
+work:
+  company-repo:
+    /remotes:
+      - name: origin
+        url: git@gitlab.com:company/repo.git
+      - name: upstream
+        url: git@gitlab.com:upstream/repo.git
+    /post_checkout:
+      - pip install -r requirements.txt
+```
+
+### 3. Clone
+
+```bash
+cloninator clone
+```
+
+## Commands
+
+- **`clone`**: Clone all repositories from configuration
+- **`generate`**: Scan existing repos and generate configuration
+
+See the [Usage Guide](usage.md) for detailed examples and workflows.
+
+## Documentation
+
+- [Installation Guide](installation.md)
+- [Usage Guide](usage.md)
+- [Changelog](CHANGELOG.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [License](LICENSE.md)
 
 [build_badge]: https://github.com/spapanik/cloninator/actions/workflows/build.yml/badge.svg
 [build_url]: https://github.com/spapanik/cloninator/actions/workflows/build.yml
