@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "uv_build>=0.9.21,<0.10.0",
+    "uv_build>=0.11.0,<0.12.0",
 ]
 build-backend = "uv_build"
 
@@ -22,7 +22,6 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
-    "License :: OSI Approved :: BSD License",
     "Intended Audience :: Developers",
 ]
 
@@ -52,7 +51,7 @@ dev = [
 ]
 lint = [
     "mypy~=1.19",
-    "ruff~=0.13",
+    "ruff~=0.14",
     "ty~=0.0.9",
     "typing-extensions~=4.14",  # upgrade: py3.10: use typing module
     { include-group = "test_core" },
@@ -124,6 +123,7 @@ ignore = [
     "FBT001",  # Test arguments are handled by pytest
     "PLR2004", # Tests should contain magic number comparisons
     "S101",    # Pytest needs assert statements
+    "SLF001",  # Tests need to access private members for coverage
 ]
 
 [tool.ruff.lint.flake8-tidy-imports]
@@ -143,7 +143,10 @@ split-on-trailing-comma = false
 [tool.pytest]
 minversion = "9.0"
 strict = true
-addopts = ["-ra", "-v"]
+addopts = [
+    "-ra",
+    "-v",
+]
 testpaths = [
     "tests",
 ]
