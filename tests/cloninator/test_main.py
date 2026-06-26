@@ -12,12 +12,12 @@ from cloninator.lib.cli import CliArgs, CloneCliArgs, GenerateCliArgs
         )
     ),
 )
-@mock.patch("cloninator.__main__.clone")
-def test_clone(mock_clone: mock.MagicMock) -> None:
+@mock.patch("cloninator.subcommands.clone.Clone.run")
+def test_clone(mock_run: mock.MagicMock) -> None:
     main()
-    assert mock_clone.call_count == 1
+    assert mock_run.call_count == 1
     calls = [mock.call()]
-    assert mock_clone.call_args_list == calls
+    assert mock_run.call_args_list == calls
 
 
 @mock.patch(
@@ -28,9 +28,9 @@ def test_clone(mock_clone: mock.MagicMock) -> None:
         )
     ),
 )
-@mock.patch("cloninator.__main__.generate")
-def test_generate(mock_generate: mock.MagicMock) -> None:
+@mock.patch("cloninator.subcommands.generate.Generate.run")
+def test_generate(mock_run: mock.MagicMock) -> None:
     main()
-    assert mock_generate.call_count == 1
+    assert mock_run.call_count == 1
     calls = [mock.call()]
-    assert mock_generate.call_args_list == calls
+    assert mock_run.call_args_list == calls

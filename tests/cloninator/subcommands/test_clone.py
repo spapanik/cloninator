@@ -1,7 +1,7 @@
 from pathlib import Path
 from unittest import mock
 
-from cloninator.subcommands.clone import add_repo, clone
+from cloninator.subcommands.clone import Clone, add_repo
 
 
 @mock.patch("cloninator.subcommands.clone.get_config")
@@ -20,7 +20,7 @@ def test_clone_new_repo(
 
     mock_get_config.return_value.repos = [mock_repo]
 
-    clone()
+    Clone(verbosity=0).run()
 
     assert mock_add_repo.call_count == 1
     assert mock_add_repo.call_args_list == [mock.call(mock_repo)]
@@ -44,7 +44,7 @@ def test_clone_existing_repo(
 
     mock_get_config.return_value.repos = [mock_repo]
 
-    clone()
+    Clone(verbosity=0).run()
 
     assert mock_add_repo.call_count == 0
     assert mock_sgr.call_count == 1

@@ -3,6 +3,7 @@ from subprocess import run
 from pyutilkit.term import SGRString
 
 from cloninator.lib.utils import Repo, get_config
+from cloninator.subcommands.base import BaseSubcommand
 
 
 def add_repo(repo: Repo) -> None:
@@ -39,11 +40,14 @@ def add_repo(repo: Repo) -> None:
         run(command, cwd=path, shell=True, check=True)  # noqa: S602
 
 
-def clone() -> None:
-    config = get_config()
-    for repo in config.repos:
-        path = repo.path
-        if path.exists() and any(path.iterdir()):
-            SGRString(f"Repo {path} already exists, skipping...", prefix="🔵 ").print()
-        else:
-            add_repo(repo)
+class Clone(BaseSubcommand):
+    def run(self) -> None:
+        config = get_config()
+        for repo in config.repos:
+            path = repo.path
+            if path.exists() and any(path.iterdir()):
+                SGRString(
+                    f"Repo {path} already exists, skipping...", prefix="🔵 "
+                ).print()
+            else:
+                add_repo(repo)

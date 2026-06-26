@@ -1,7 +1,7 @@
 from pathlib import Path
 from unittest import mock
 
-from cloninator.subcommands.generate import generate
+from cloninator.subcommands.generate import Generate
 
 
 @mock.patch("cloninator.subcommands.generate.get_config")
@@ -37,7 +37,7 @@ def test_generate(
     mock_yaml = mock.MagicMock()
     mock_yaml_cls.return_value = mock_yaml
 
-    generate()
+    Generate(verbosity=0).run()
 
     assert mock_get_config.call_count == 1
     assert mock_get_config.call_args_list == [mock.call(soft_info=False)]
