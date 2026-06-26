@@ -1,16 +1,11 @@
-import sys
-
 from cloninator.lib.cli import parse_args
 from cloninator.subcommands.clone import clone
 from cloninator.subcommands.generate import generate
 
-sys.tracebacklimit = 0
-
 
 def main() -> None:
     args = parse_args()
-    match args.subcommand:
-        case "clone":
-            clone()
-        case "generate":  # pragma: no branch
-            generate()
+    if args.clone_subcommand is not None:
+        clone()
+    elif args.generate_subcommand is not None:
+        generate()
