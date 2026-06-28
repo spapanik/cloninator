@@ -7,23 +7,24 @@
 Create a configuration file at `~/.config/cloninator/config.yaml`:
 
 ```yaml
-/root: ~/projects
-
 personal:
-  myproject:
-    /remotes:
-      - name: origin
-        url: git@github.com:user/myproject.git
+    /root: ~/projects
+    myproject:
+        /remotes:
+            - name: origin
+              url: git@github.com:user/myproject.git
 
 work:
-  company-repo:
-    /remotes:
-      - name: origin
-        url: git@gitlab.com:company/repo.git
-      - name: upstream
-        url: git@gitlab.com:upstream/repo.git
-    /post_checkout:
-      - pip install -r requirements.txt
+    /root: ~/projects
+    /prefix: "git@gitlab.com:"
+    company-repo:
+        /remotes:
+            - name: upstream
+              url: upstream/repo.git
+            - name: origin
+              url: username/repo.git
+        /post_checkout:
+            - pip install -r requirements.txt
 ```
 
 ### 2. Clone Repositories
@@ -33,6 +34,7 @@ cloninator clone
 ```
 
 This will:
+
 - Create directory structure under `/root`
 - Clone each repository with configured remotes
 - Run post-checkout commands (if specified)
@@ -49,17 +51,19 @@ cloninator clone [-v]
 ```
 
 **Options:**
+
 - `-v, --verbose`: Increase verbosity (can be stacked: `-vv`, `-vvv`)
 
 **Behavior:**
+
 - Reads configuration from `~/.config/cloninator/config.yaml`
 - Can also read additional configs from `~/.config/cloninator/config.yaml.d/*.yaml`
 - Skips repositories that already exist and are non-empty
 - For new repositories:
-  1. Creates directory structure
-  2. Clones using first remote as origin
-  3. Adds additional remotes
-  4. Runs post-checkout commands (if any)
+    1. Creates directory structure
+    2. Clones using first remote as origin
+    3. Adds additional remotes
+    4. Runs post-checkout commands (if any)
 
 ### `generate`
 
@@ -70,9 +74,11 @@ cloninator generate [-v]
 ```
 
 **Options:**
+
 - `-v, --verbose`: Increase verbosity (can be stacked: `-vv`, `-vvv`)
 
 **Behavior:**
+
 - Scans the configured root directory for `.git` directories
 - Extracts remote information using git config
 - Compares against existing config to find missing repos
@@ -103,20 +109,20 @@ Multiple YAML files are automatically merged, allowing you to split configuratio
 ### Structure
 
 ```yaml
-/root: /path/to/repos/directory   # REQUIRED: Base directory for all repos
+/root: /path/to/repos/directory # REQUIRED: Base directory for all repos
 
 # Nested directory structure representing repo organization
 group_name:
-  subgroup:
-    repo_name:
-      /remotes:                    # REQUIRED: List of git remotes
-        - name: origin             # Remote name
-          url: https://github.com/user/repo.git
-        - name: upstream
-          url: https://github.com/upstream/repo.git
-      /post_checkout:              # OPTIONAL: Commands to run after checkout
-        - pip install -r requirements.txt
-        - npm install
+    subgroup:
+        repo_name:
+            /remotes: # REQUIRED: List of git remotes
+                - name: origin # Remote name
+                  url: https://github.com/user/repo.git
+                - name: upstream
+                  url: https://github.com/upstream/repo.git
+            /post_checkout: # OPTIONAL: Commands to run after checkout
+                - pip install -r requirements.txt
+                - npm install
 ```
 
 ### Required Fields
@@ -146,9 +152,9 @@ Invalid configurations are skipped with error messages.
 /root: ~/projects
 
 myapp:
-  /remotes:
-    - name: origin
-      url: git@github.com:user/myapp.git
+    /remotes:
+        - name: origin
+          url: git@github.com:user/myapp.git
 ```
 
 ### Example 2: Multiple Remotes
@@ -157,11 +163,11 @@ myapp:
 /root: ~/projects
 
 forked-project:
-  /remotes:
-    - name: origin
-      url: git@github.com:user/fork.git
-    - name: upstream
-      url: git@github.com:original/project.git
+    /remotes:
+        - name: origin
+          url: git@github.com:user/fork.git
+        - name: upstream
+          url: git@github.com:original/project.git
 ```
 
 ### Example 3: With Post-Checkout Commands
@@ -170,12 +176,12 @@ forked-project:
 /root: ~/projects
 
 webapp:
-  /remotes:
-    - name: origin
-      url: git@github.com:user/webapp.git
-  /post_checkout:
-    - npm install
-    - npm run build
+    /remotes:
+        - name: origin
+          url: git@github.com:user/webapp.git
+    /post_checkout:
+        - npm install
+        - npm run build
 ```
 
 ### Example 4: Nested Directory Structure
@@ -184,25 +190,26 @@ webapp:
 /root: ~/projects
 
 work:
-  backend:
-    api-service:
-      /remotes:
-        - name: origin
-          url: git@gitlab.com:company/api.git
-  frontend:
-    web-app:
-      /remotes:
-        - name: origin
-          url: git@gitlab.com:company/web.git
+    backend:
+        api-service:
+            /remotes:
+                - name: origin
+                  url: git@gitlab.com:company/api.git
+    frontend:
+        web-app:
+            /remotes:
+                - name: origin
+                  url: git@gitlab.com:company/web.git
 
 personal:
-  side-project:
-    /remotes:
-      - name: origin
-        url: git@github.com:user/side-project.git
+    side-project:
+        /remotes:
+            - name: origin
+              url: git@github.com:user/side-project.git
 ```
 
 This creates:
+
 - `~/projects/work/backend/api-service`
 - `~/projects/work/frontend/web-app`
 - `~/projects/personal/side-project`
@@ -219,20 +226,20 @@ Create `~/.config/cloninator/config.yaml.d/personal.yaml`:
 
 ```yaml
 personal:
-  myproject:
-    /remotes:
-      - name: origin
-        url: git@github.com:user/myproject.git
+    myproject:
+        /remotes:
+            - name: origin
+              url: git@github.com:user/myproject.git
 ```
 
 Create `~/.config/cloninator/config.yaml.d/work.yaml`:
 
 ```yaml
 work:
-  company-repo:
-    /remotes:
-      - name: origin
-        url: git@gitlab.com:company/repo.git
+    company-repo:
+        /remotes:
+            - name: origin
+              url: git@gitlab.com:company/repo.git
 ```
 
 All three files are automatically merged.

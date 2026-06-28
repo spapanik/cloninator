@@ -8,4 +8,8 @@ def main() -> None:
     if args.clone_subcommand is not None:
         Clone(args.verbosity).run()
     elif args.generate_subcommand is not None:
-        Generate(args.verbosity).run()
+        Generate(
+            repo_groups=args.generate_subcommand.repo_groups,
+            split_groups=args.generate_subcommand.split_groups,
+            verbosity=args.verbosity,
+        ).run()

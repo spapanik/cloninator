@@ -39,20 +39,20 @@ Create `~/.config/cloninator/config.yaml`:
 /root: ~/projects
 
 personal:
-  myproject:
-    /remotes:
-      - name: origin
-        url: git@github.com:user/myproject.git
+    myproject:
+        /remotes:
+            - name: origin
+              url: git@github.com:user/myproject.git
 
 work:
-  company-repo:
-    /remotes:
-      - name: origin
-        url: git@gitlab.com:company/repo.git
-      - name: upstream
-        url: git@gitlab.com:upstream/repo.git
-    /post_checkout:
-      - pip install -r requirements.txt
+    company-repo:
+        /remotes:
+            - name: origin
+              url: git@gitlab.com:company/repo.git
+            - name: upstream
+              url: git@gitlab.com:upstream/repo.git
+        /post_checkout:
+            - pip install -r requirements.txt
 ```
 
 ### 3. Clone

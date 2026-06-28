@@ -1,103 +1,198 @@
+from __future__ import annotations
+
 from pathlib import Path
 from unittest import mock
 
-from cloninator.subcommands.clone import Clone, add_repo
+from cloninator.lib.utils import Config, Remote, Repo, RepoGroup
+from cloninator.subcommands.clone import Clone
 
 
-@mock.patch("cloninator.subcommands.clone.get_config")
-@mock.patch("cloninator.subcommands.clone.add_repo")
-@mock.patch("cloninator.subcommands.clone.SGRString")
-def test_clone_new_repo(
-    mock_sgr: mock.MagicMock,
-    mock_add_repo: mock.MagicMock,
-    mock_get_config: mock.MagicMock,
-) -> None:
-    mock_repo = mock.MagicMock()
+def test_clone_add_repo_repo_already_exists(tmp_path: Path) -> None:
+    repo_path = tmp_path / "existing-repo"
+    repo_path.mkdir()
 
-    mock_path = mock.MagicMock(spec=Path)
-    mock_path.exists.return_value = False
-    mock_repo.path = mock_path
+    repo = Repo(
+        path=repo_path,
+        remotes=(Remote(name="origin", url="git@github.com:user/repo.git"),),
+        post_checkout=(),
+    )
 
-    mock_get_config.return_value.repos = [mock_repo]
+    with mock.patch("cloninator.subcommands.clone.run") as mock_run:
+        Clone(verbosity=0).add_repo(repo)
 
-    Clone(verbosity=0).run()
-
-    assert mock_add_repo.call_count == 1
-    assert mock_add_repo.call_args_list == [mock.call(mock_repo)]
-    assert mock_sgr.call_count == 0
+    mock_run.assert_not_called()
+    assert repo_path.exists()
 
 
-@mock.patch("cloninator.subcommands.clone.get_config")
-@mock.patch("cloninator.subcommands.clone.add_repo")
-@mock.patch("cloninator.subcommands.clone.SGRString")
-def test_clone_existing_repo(
-    mock_sgr: mock.MagicMock,
-    mock_add_repo: mock.MagicMock,
-    mock_get_config: mock.MagicMock,
-) -> None:
-    mock_repo = mock.MagicMock()
+def test_clone_add_repo_clone_new_repo(tmp_path: Path) -> None:
+    repo_path = tmp_path / "new-repo"
 
-    mock_path = mock.MagicMock(spec=Path)
-    mock_path.exists.return_value = True
-    mock_path.iterdir.return_value = [Path("file")]
-    mock_repo.path = mock_path
+    repo = Repo(
+        path=repo_path,
+        remotes=(Remote(name="origin", url="git@github.com:user/repo.git"),),
+        post_checkout=(),
+    )
 
-    mock_get_config.return_value.repos = [mock_repo]
+    with mock.patch("cloninator.subcommands.clone.run") as mock_run:
+        Clone(verbosity=0).add_repo(repo)
 
-    Clone(verbosity=0).run()
+    assert mock_run.call_count == 1
+    mock_run.assert_called_once_with(
+        [
+            "git",
+            "clone",
+            "git@github.com:user/repo.git",
+            repo_path,
+            "--origin",
+            "origin",
+        ],
+        check=True,
+    )
 
-    assert mock_add_repo.call_count == 0
-    assert mock_sgr.call_count == 1
-    assert mock_sgr.return_value.print.call_count == 1
 
+def test_clone_add_repo_clone_with_multiple_remotes(tmp_path: Path) -> None:
+    repo_path = tmp_path / "multi-remote-repo"
 
-@mock.patch("cloninator.subcommands.clone.run")
-@mock.patch("cloninator.subcommands.clone.SGRString", new=mock.MagicMock())
-def test_add_repo(mock_run: mock.MagicMock) -> None:
-    mock_repo = mock.MagicMock()
-    mock_path = mock.MagicMock(spec=Path)
-    mock_repo.path = mock_path
-    mock_origin = mock.MagicMock()
-    mock_origin.name = "origin"
-    mock_origin.url = "https://github.com/user/repo.git"
-    mock_upstream = mock.MagicMock()
-    mock_upstream.name = "upstream"
-    mock_upstream.url = "https://github.com/upstream/repo.git"
-    mock_repo.remotes = [mock_origin, mock_upstream]
-    mock_repo.post_checkout = ["echo hello"]
+    repo = Repo(
+        path=repo_path,
+        remotes=(
+            Remote(name="origin", url="git@github.com:user/repo.git"),
+            Remote(name="upstream", url="git@github.com:upstream/repo.git"),
+            Remote(name="fork", url="git@github.com:fork/repo.git"),
+        ),
+        post_checkout=(),
+    )
 
-    add_repo(mock_repo)
-
-    assert mock_path.mkdir.call_count == 1
-    assert mock_path.mkdir.call_args_list == [mock.call(parents=True, exist_ok=True)]
+    with mock.patch("cloninator.subcommands.clone.run") as mock_run:
+        Clone(verbosity=0).add_repo(repo)
 
     assert mock_run.call_count == 3
-    expected_calls = [
-        mock.call(
-            [
-                "git",
-                "clone",
-                "https://github.com/user/repo.git",
-                mock_path,
-                "--origin",
-                "origin",
-            ],
-            check=True,
+
+    calls = mock_run.call_args_list
+    assert calls[0] == mock.call(
+        [
+            "git",
+            "clone",
+            "git@github.com:user/repo.git",
+            repo_path,
+            "--origin",
+            "origin",
+        ],
+        check=True,
+    )
+    assert calls[1] == mock.call(
+        [
+            "git",
+            "-C",
+            repo_path,
+            "remote",
+            "add",
+            "upstream",
+            "git@github.com:upstream/repo.git",
+        ],
+        check=True,
+    )
+    assert calls[2] == mock.call(
+        [
+            "git",
+            "-C",
+            repo_path,
+            "remote",
+            "add",
+            "fork",
+            "git@github.com:fork/repo.git",
+        ],
+        check=True,
+    )
+
+
+def test_clone_add_repo_clone_with_post_checkout(tmp_path: Path) -> None:
+    repo_path = tmp_path / "post-checkout-repo"
+
+    repo = Repo(
+        path=repo_path,
+        remotes=(Remote(name="origin", url="git@github.com:user/repo.git"),),
+        post_checkout=("make build", "pytest tests/"),
+    )
+
+    with mock.patch("cloninator.subcommands.clone.run") as mock_run:
+        Clone(verbosity=0).add_repo(repo)
+
+    assert mock_run.call_count == 3
+
+    calls = mock_run.call_args_list
+    assert calls[0][0][0][:2] == ["git", "clone"]
+
+    assert calls[1] == mock.call(  # noqa: S604
+        "make build", cwd=repo_path, shell=True, check=True
+    )
+    assert calls[2] == mock.call(  # noqa: S604
+        "pytest tests/", cwd=repo_path, shell=True, check=True
+    )
+
+
+def test_clone_add_repo_clone_creates_parent_directories(tmp_path: Path) -> None:
+    repo_path = tmp_path / "nested" / "deep" / "repo"
+
+    repo = Repo(
+        path=repo_path,
+        remotes=(Remote(name="origin", url="git@github.com:user/repo.git"),),
+        post_checkout=(),
+    )
+
+    with mock.patch("cloninator.subcommands.clone.run"):
+        Clone(verbosity=0).add_repo(repo)
+
+    assert repo_path.parent.exists()
+
+
+@mock.patch("cloninator.subcommands.clone.get_config")
+def test_clone_run_with_empty_config(mock_get_config: mock.MagicMock) -> None:
+    mock_get_config.return_value = Config(groups=())
+
+    clone = Clone(verbosity=0)
+    with mock.patch.object(clone, "add_repo") as mock_add_repo:
+        clone.run()
+
+    mock_add_repo.assert_not_called()
+
+
+@mock.patch("cloninator.subcommands.clone.get_config")
+def test_clone_run_with_repos(mock_get_config: mock.MagicMock, tmp_path: Path) -> None:
+    group = RepoGroup(
+        name="test-group",
+        root=tmp_path,
+        prefix="",
+        raw_repos=(
+            Repo(
+                path=Path("repo1"),
+                remotes=(Remote(name="origin", url="url1"),),
+                post_checkout=(),
+            ),
+            Repo(
+                path=Path("repo2"),
+                remotes=(Remote(name="origin", url="url2"),),
+                post_checkout=(),
+            ),
         ),
-        mock.call(
-            [
-                "git",
-                "-C",
-                mock_path,
-                "remote",
-                "add",
-                "upstream",
-                "https://github.com/upstream/repo.git",
-            ],
-            check=True,
-        ),
-        mock.call(  # noqa: S604
-            "echo hello", cwd=mock_path, shell=True, check=True
-        ),
-    ]
-    assert mock_run.call_args_list == expected_calls
+    )
+    mock_get_config.return_value = Config(groups=(group,))
+
+    clone = Clone(verbosity=0)
+    with mock.patch.object(clone, "add_repo") as mock_add_repo:
+        clone.run()
+
+    assert mock_add_repo.call_count == 2
+    assert mock_add_repo.call_args_list[0][0][0].path == tmp_path / "repo1"
+    assert mock_add_repo.call_args_list[1][0][0].path == tmp_path / "repo2"
+
+
+@mock.patch("cloninator.subcommands.clone.get_config")
+def test_clone_run_verbosity_passed(mock_get_config: mock.MagicMock) -> None:
+    mock_get_config.return_value = Config(groups=())
+
+    clone = Clone(verbosity=2)
+    assert clone.verbosity == 2
+
+    with mock.patch.object(clone, "add_repo"):
+        clone.run()
