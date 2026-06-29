@@ -327,32 +327,17 @@ def test_get_config_group_with_prefix_in_repo_group(
     repo_data: RepoData = {
         "/remotes": [{"name": "origin", "url": "github.com:user/repo.git"}],
     }
-    # Note: "prefix" key causes issues in _get_raw_repos as it's not filtered
-    # This test verifies that RepoGroup correctly uses prefix when set
     mock_get_data.return_value = {
         "group": {
             "/root": Path("/repos"),
+            "/prefix": "https://",
             "repo": repo_data,
         },
     }
     config = get_config()
-    # Manually verify the RepoGroup would use prefix if set
-    assert config.groups[0].prefix == ""
+    assert config.groups[0].prefix == "https://"
 
-    # Test that RepoGroup correctly applies prefix when it's set
-    group_with_prefix = RepoGroup(
-        name="test",
-        root=Path("/repos"),
-        prefix="https://",
-        raw_repos=(
-            Repo(
-                path=Path("repo"),
-                remotes=(Remote(name="origin", url="github.com:user/repo.git"),),
-                post_checkout=(),
-            ),
-        ),
-    )
-    repos = list(group_with_prefix.repos)
+    repos = list(config.repos)
     assert repos[0].remotes[0].url == "https://github.com:user/repo.git"
 
 

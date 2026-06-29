@@ -106,7 +106,7 @@ def get_config() -> Config:
         RepoGroup(
             name=name,
             root=group_data["/root"],
-            prefix=group_data.get("prefix", ""),
+            prefix=group_data.get("/prefix", ""),
             raw_repos=tuple(_get_raw_repos(group_data)),
         )
         for name, group_data in data.items()
