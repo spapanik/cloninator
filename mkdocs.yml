@@ -1,39 +1,77 @@
 site_name: cloninator
+site_description: A CLI tool to manage Git repositories through YAML configuration
+site_author: Stephanos Kuma
+copyright: Copyright &copy; 2024 Stephanos Kuma
 
 repo_url: https://github.com/spapanik/cloninator
+repo_name: spapanik/cloninator
+edit_uri: edit/main/docs/
 
 nav:
-  - Home: README.md
-  - Installation: installation.md
-  - Usage: usage.md
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quick-start.md
+  - User Guide:
+      - Configuration: guide/configuration.md
+      - Commands: guide/commands.md
+      - Examples: guide/examples.md
+      - Workflows: guide/workflows.md
+  - Reference:
+      - Configuration Reference: reference/configuration.md
+      - CLI Reference: reference/cli.md
+  - Contributing: contributing.md
   - About:
-      - License: LICENSE.md
       - Changelog: CHANGELOG.md
+      - License: LICENSE.md
       - Code of Conduct: CODE_OF_CONDUCT.md
 
 markdown_extensions:
   - pymdownx.highlight:
       use_pygments: true
-  - admonition
-  - pymdownx.superfences
-  - pymdownx.details
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
   - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - tables
+  - attr_list
+  - md_in_html
+  - def_list
+  - footnotes
+  - toc:
+      permalink: true
+      toc_depth: 3
 
 theme:
   name: material
 
+  logo: assets/logo.svg
+  favicon: assets/favicon.ico
+
   icon:
     repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
 
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: indigo
+      accent: indigo
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
 
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: indigo
+      accent: indigo
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -41,10 +79,36 @@ theme:
   features:
     - content.code.annotate
     - content.code.copy
+    - content.code.select
+    - content.tabs.link
+    - navigation.footer
     - navigation.indexes
     - navigation.instant
+    - navigation.instant.prefetch
     - navigation.instant.progress
+    - navigation.path
+    - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
     - navigation.tracking
-    - search
-    - search.suggest
+    - search.highlight
     - search.share
+    - search.suggest
+    - toc.follow
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/spapanik/cloninator
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/cloninator/
+
+  version:
+    provider: mike
+
+plugins:
+  - search
+
+watch:
+  - docs
