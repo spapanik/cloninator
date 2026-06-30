@@ -26,6 +26,12 @@ class RepoGroupKey:
 
 
 @dataclass(frozen=True, slots=True)
+class EnvVar:
+    key: str
+    value: str
+
+
+@dataclass(frozen=True, slots=True)
 class Remote:
     name: str
     url: str
@@ -41,14 +47,19 @@ class Remote:
 class Repo:
     path: Path
     remotes: tuple[Remote, ...]
-    post_checkout: tuple[str, ...]
+    post_checkout: tuple[str, ...] = ()
+    env_vars: tuple[EnvVar, ...] = ()
 
     def parsed(self, root: Path, prefix: str) -> Self:
         return self.__class__(
             path=root / self.path,
             remotes=tuple(remote.with_prefix(prefix) for remote in self.remotes),
             post_checkout=self.post_checkout,
+            env_vars=self.env_vars,
         )
+
+    def get_env(self) -> dict[str, str]:
+        return {env_var.key: env_var.value for env_var in self.env_vars}
 
 
 @dataclass(frozen=True, slots=True)
@@ -97,6 +108,10 @@ def _get_raw_repos(group_data: dict[str, RepoData]) -> Iterator[Repo]:
                 Remote(**remote_data) for remote_data in repo_config["/remotes"]
             ),
             post_checkout=tuple(repo_config.get("/post_checkout", [])),
+            env_vars=tuple(
+                EnvVar(key=key, value=value)
+                for key, value in repo_config.get("/checkout_env_vars", {}).items()
+            ),
         )
 
 

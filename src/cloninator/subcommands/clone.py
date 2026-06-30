@@ -1,3 +1,4 @@
+import os
 from subprocess import run
 
 from pyutilkit.term import SGRString
@@ -16,10 +17,12 @@ class Clone(BaseSubcommand):
 
         path.mkdir(parents=True)
         origin = repo.remotes[0]
+        env = os.environ | repo.get_env()
         SGRString(f"Cloning {origin.url} at {path}...", prefix="🟢 ").print()
         run(  # noqa: S603
             ["git", "clone", origin.url, path, "--origin", origin.name],  # noqa: S607
             check=True,
+            env=env,
         )
         for remote in repo.remotes[1:]:
             SGRString(

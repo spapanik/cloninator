@@ -67,7 +67,7 @@ class Generate(BaseSubcommand):
                 _, name, _ = full_name.split(".")
                 remotes.append(Remote(name=name, url=url))
             yield {
-                "repo": Repo(path=path, remotes=tuple(remotes), post_checkout=()),
+                "repo": Repo(path=path, remotes=tuple(remotes)),
                 "repo_group_key": repo_group,
             }
 

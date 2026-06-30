@@ -15,7 +15,11 @@ class RemoteData(TypedDict):
 
 RepoData = TypedDict(
     "RepoData",
-    {"/remotes": Required[list[RemoteData]], "/post_checkout": list[str]},
+    {
+        "/remotes": Required[list[RemoteData]],
+        "/post_checkout": list[str],
+        "/checkout_env_vars": dict[str, str],
+    },
     total=False,
 )
 

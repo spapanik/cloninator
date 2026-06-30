@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from unittest import mock
 
-from cloninator.lib.utils import Config, Remote, Repo, RepoGroup
+from cloninator.lib.utils import Config, EnvVar, Remote, Repo, RepoGroup
 from cloninator.subcommands.clone import Clone
 
 
@@ -14,7 +15,6 @@ def test_clone_add_repo_repo_already_exists(tmp_path: Path) -> None:
     repo = Repo(
         path=repo_path,
         remotes=(Remote(name="origin", url="git@github.com:user/repo.git"),),
-        post_checkout=(),
     )
 
     with mock.patch("cloninator.subcommands.clone.run") as mock_run:
@@ -30,7 +30,7 @@ def test_clone_add_repo_clone_new_repo(tmp_path: Path) -> None:
     repo = Repo(
         path=repo_path,
         remotes=(Remote(name="origin", url="git@github.com:user/repo.git"),),
-        post_checkout=(),
+        env_vars=(EnvVar(key="KEY", value="value"),),
     )
 
     with mock.patch("cloninator.subcommands.clone.run") as mock_run:
@@ -47,6 +47,7 @@ def test_clone_add_repo_clone_new_repo(tmp_path: Path) -> None:
             "origin",
         ],
         check=True,
+        env=os.environ | {"KEY": "value"},
     )
 
 
@@ -60,7 +61,6 @@ def test_clone_add_repo_clone_with_multiple_remotes(tmp_path: Path) -> None:
             Remote(name="upstream", url="git@github.com:upstream/repo.git"),
             Remote(name="fork", url="git@github.com:fork/repo.git"),
         ),
-        post_checkout=(),
     )
 
     with mock.patch("cloninator.subcommands.clone.run") as mock_run:
@@ -79,6 +79,7 @@ def test_clone_add_repo_clone_with_multiple_remotes(tmp_path: Path) -> None:
             "origin",
         ],
         check=True,
+        env=os.environ,
     )
     assert calls[1] == mock.call(
         [
@@ -137,7 +138,6 @@ def test_clone_add_repo_clone_creates_parent_directories(tmp_path: Path) -> None
     repo = Repo(
         path=repo_path,
         remotes=(Remote(name="origin", url="git@github.com:user/repo.git"),),
-        post_checkout=(),
     )
 
     with mock.patch("cloninator.subcommands.clone.run"):
@@ -167,12 +167,10 @@ def test_clone_run_with_repos(mock_get_config: mock.MagicMock, tmp_path: Path) -
             Repo(
                 path=Path("repo1"),
                 remotes=(Remote(name="origin", url="url1"),),
-                post_checkout=(),
             ),
             Repo(
                 path=Path("repo2"),
                 remotes=(Remote(name="origin", url="url2"),),
-                post_checkout=(),
             ),
         ),
     )

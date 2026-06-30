@@ -199,7 +199,6 @@ def test_generate_run_no_missing_repos() -> None:
     repo = Repo(
         path=Path("/existing/repo"),
         remotes=(Remote(name="origin", url="url"),),
-        post_checkout=(),
     )
     group = RepoGroup(
         name="group",
@@ -237,7 +236,6 @@ def test_generate_run_with_missing_repos(tmp_path: Path) -> None:
     existing_repo = Repo(
         path=tmp_path / "existing",
         remotes=(Remote(name="origin", url="url"),),
-        post_checkout=(),
     )
     group = RepoGroup(
         name="group",
@@ -249,7 +247,6 @@ def test_generate_run_with_missing_repos(tmp_path: Path) -> None:
     missing_repo = Repo(
         path=tmp_path / "missing",
         remotes=(Remote(name="origin", url="new-url"),),
-        post_checkout=(),
     )
     repo_group_key = RepoGroupKey(name="test-group", root=tmp_path)
 
@@ -288,12 +285,10 @@ def test_generate_run_groups_repos_by_key(tmp_path: Path) -> None:
     repo1 = Repo(
         path=tmp_path / "repo1",
         remotes=(Remote(name="origin", url="url1"),),
-        post_checkout=(),
     )
     repo2 = Repo(
         path=tmp_path / "repo2",
         remotes=(Remote(name="origin", url="url2"),),
-        post_checkout=(),
     )
 
     key1 = RepoGroupKey(name="group1", root=tmp_path / "g1")
@@ -334,7 +329,6 @@ def test_generate_run_handles_relative_paths(tmp_path: Path) -> None:
     repo = Repo(
         path=tmp_path / "subdir" / "repo",
         remotes=(Remote(name="origin", url="url"),),
-        post_checkout=(),
     )
     key = RepoGroupKey(name="group", root=tmp_path)
 
@@ -374,7 +368,6 @@ def test_generate_run_handles_absolute_repo_paths(tmp_path: Path) -> None:
     repo = Repo(
         path=absolute_path,
         remotes=(Remote(name="origin", url="url"),),
-        post_checkout=(),
     )
     key = RepoGroupKey(name="group", root=tmp_path)
 
