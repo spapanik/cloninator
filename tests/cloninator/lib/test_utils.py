@@ -30,7 +30,7 @@ def test_repo_group_key_creation() -> None:
 def test_repo_group_key_immutability() -> None:
     key = RepoGroupKey(name="test", root=Path("/root"))
     with pytest.raises(AttributeError):
-        key.name = "modified"  # type: ignore[misc]
+        key.name = "modified"  # type: ignore[misc]  # ty: ignore[invalid-assignment]
 
 
 def test_remote_creation() -> None:
