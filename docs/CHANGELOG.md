@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Changed
+
+- Changed clone progress messages to use 🟡 while work is in progress and 🟢
+  only after cloning, remote setup, and post-checkout commands all succeed
+
+### Fixed
+
+- Added clear 🔴 error reporting when repository setup fails
+- Made `clone` stop at the first repository failure and exit with status code `1`
+
 ## [0.2.0] - 2026-06-29
 
 ### Added

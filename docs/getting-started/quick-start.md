@@ -33,8 +33,14 @@ cloninator clone
 You should see output like:
 
 ```
-🟢 Cloning git@github.com:user/myproject.git at ~/projects/personal/myproject...
+🟡 Cloning git@github.com:user/myproject.git at ~/projects/personal/myproject...
+🟢 Cloned git@github.com:user/myproject.git at ~/projects/personal/myproject.
 ```
+
+🟡 means the repository setup is still in progress. The 🟢 message is shown
+only after cloning, remote setup, and all post-checkout commands succeed. A
+failure is shown with 🔴, stops any remaining repositories from being processed,
+and exits with status code `1`.
 
 ## Step 4: Verify
 

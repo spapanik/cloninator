@@ -64,6 +64,9 @@ cloninator clone [-v]
     2. Clones using first remote as origin
     3. Adds additional remotes
     4. Runs post-checkout commands (if any)
+    5. Reports 🟢 success only after every step succeeds
+- If a repository setup step fails, reports the repository and error with 🔴,
+  stops processing, and exits with status code `1`
 
 ### `generate`
 
@@ -307,9 +310,10 @@ cloninator generate
 
 Cloninator uses emoji indicators for status messages:
 
-- 🟢 Success/progress messages
+- 🟡 Attempt/progress messages
+- 🟢 Success messages
 - 🔵 Info/skip messages (existing repos, local-only repos)
-- ❌ Error/validation failures (invalid config entries)
+- 🔴 Repository setup failures
 
 ## Tips
 

@@ -61,6 +61,11 @@ work:
 cloninator clone
 ```
 
+Clone operations display 🟡 while work is in progress and 🟢 only after the
+clone, remote setup, and post-checkout commands all succeed. If any step fails,
+cloninator displays a 🔴 error, stops processing repositories, and exits with
+status code `1`.
+
 ## Commands
 
 - **`clone`**: Clone all repositories from configuration

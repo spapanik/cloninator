@@ -46,7 +46,8 @@ cloninator clone [-v]
 **Exit Codes**:
 
 - `0`: Success (all repos cloned or skipped)
-- `1`: Error (invalid config, network issues, etc.)
+- `1`: Repository setup or configuration error. Processing stops at the first
+  repository failure.
 
 **Examples**:
 
@@ -63,9 +64,16 @@ cloninator clone -vvv
 
 **Output Indicators**:
 
-- 🟢 Success/progress messages
+- 🟡 Attempt/progress messages
+- 🟢 Success messages
 - 🔵 Info/skip messages
-- ❌ Error messages
+- 🔴 Error messages
+
+For a new repository, cloning, additional remote setup, and post-checkout
+commands are one operation. The 🟢 message is emitted only when every step
+succeeds. If any step fails, cloninator emits a 🔴 message containing the
+repository path and underlying error, then exits with status code `1` without
+processing the remaining repositories.
 
 ### generate
 

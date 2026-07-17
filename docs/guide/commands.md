@@ -28,6 +28,9 @@ The `clone` command:
    - Clones using the first remote as origin
    - Adds additional remotes (if configured)
    - Runs post-checkout commands (if configured)
+   - Reports 🟢 success only after every setup step succeeds
+4. If a setup step fails, reports the error with 🔴, stops processing, and exits
+   with status code `1`
 
 ### Examples
 
@@ -97,4 +100,6 @@ These options work with any command:
 ## Exit Codes
 
 - `0`: Success
-- `1`: Error (invalid configuration, network issues, etc.)
+- `1`: Repository setup or configuration error. For `clone`, processing stops at
+  the first failure.
+- `2`: Invalid command-line arguments or usage

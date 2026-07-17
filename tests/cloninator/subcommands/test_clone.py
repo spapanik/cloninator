@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from subprocess import CalledProcessError
 from unittest import mock
+
+import pytest
 
 from cloninator.lib.utils import Config, EnvVar, Remote, Repo, RepoGroup
 from cloninator.subcommands.clone import Clone
@@ -132,6 +135,60 @@ def test_clone_add_repo_clone_with_post_checkout(tmp_path: Path) -> None:
     )
 
 
+def test_clone_add_repo_reports_attempt_then_success(tmp_path: Path) -> None:
+    repo_path = tmp_path / "successful-repo"
+    repo = Repo(
+        path=repo_path,
+        remotes=(Remote(name="origin", url="git@github.com:user/repo.git"),),
+        post_checkout=("make build",),
+    )
+
+    with (
+        mock.patch("cloninator.subcommands.clone.run"),
+        mock.patch("cloninator.subcommands.clone.SGRString") as mock_sgr_string,
+    ):
+        Clone(verbosity=0).add_repo(repo)
+
+    assert mock_sgr_string.call_args_list == [
+        mock.call(
+            f"Cloning git@github.com:user/repo.git at {repo_path}...",
+            prefix="🟡 ",
+        ),
+        mock.call(
+            f"Running post-checkout commands ['make build'] for {repo_path}...",
+            prefix="🟡 ",
+        ),
+        mock.call(
+            f"Cloned git@github.com:user/repo.git at {repo_path}.",
+            prefix="🟢 ",
+        ),
+    ]
+
+
+def test_clone_add_repo_does_not_report_success_when_post_checkout_fails(
+    tmp_path: Path,
+) -> None:
+    repo_path = tmp_path / "failed-repo"
+    repo = Repo(
+        path=repo_path,
+        remotes=(Remote(name="origin", url="git@github.com:user/repo.git"),),
+        post_checkout=("make build",),
+    )
+
+    with (
+        mock.patch(
+            "cloninator.subcommands.clone.run",
+            side_effect=(mock.DEFAULT, CalledProcessError(1, "make build")),
+        ),
+        mock.patch("cloninator.subcommands.clone.SGRString") as mock_sgr_string,
+        pytest.raises(CalledProcessError),
+    ):
+        Clone(verbosity=0).add_repo(repo)
+
+    prefixes = [call.kwargs["prefix"] for call in mock_sgr_string.call_args_list]
+    assert "🟢 " not in prefixes
+
+
 def test_clone_add_repo_clone_creates_parent_directories(tmp_path: Path) -> None:
     repo_path = tmp_path / "nested" / "deep" / "repo"
 
@@ -183,6 +240,44 @@ def test_clone_run_with_repos(mock_get_config: mock.MagicMock, tmp_path: Path) -
     assert mock_add_repo.call_count == 2
     assert mock_add_repo.call_args_list[0][0][0].path == tmp_path / "repo1"
     assert mock_add_repo.call_args_list[1][0][0].path == tmp_path / "repo2"
+
+
+@mock.patch("cloninator.subcommands.clone.get_config")
+def test_clone_run_reports_failure_and_exits(
+    mock_get_config: mock.MagicMock, tmp_path: Path
+) -> None:
+    repo = Repo(
+        path=tmp_path / "failed-repo",
+        remotes=(Remote(name="origin", url="url"),),
+    )
+    mock_get_config.return_value = Config(
+        groups=(
+            RepoGroup(
+                name="test-group",
+                root=tmp_path,
+                prefix="",
+                raw_repos=(repo,),
+            ),
+        )
+    )
+    clone = Clone(verbosity=0)
+
+    with (
+        mock.patch.object(
+            clone, "add_repo", side_effect=CalledProcessError(1, "git clone")
+        ),
+        mock.patch("cloninator.subcommands.clone.SGRString") as mock_sgr_string,
+        pytest.raises(SystemExit) as system_exit,
+    ):
+        clone.run()
+
+    assert system_exit.value.code == 1
+    mock_sgr_string.assert_called_once_with(
+        f"Failed to add repo {repo.path}: "
+        "Command 'git clone' returned non-zero exit status 1.",
+        prefix="🔴 ",
+    )
+    mock_sgr_string.return_value.print.assert_called_once_with()
 
 
 @mock.patch("cloninator.subcommands.clone.get_config")
