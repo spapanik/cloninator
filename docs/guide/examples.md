@@ -164,9 +164,9 @@ work:
     company-repo:
         /remotes:
             - name: origin
-              url: username/repo.git  # Becomes git@gitlab.com:username/repo.git
+              url: username/repo.git # Becomes git@gitlab.com:username/repo.git
             - name: upstream
-              url: team/repo.git      # Becomes git@gitlab.com:team/repo.git
+              url: team/repo.git # Becomes git@gitlab.com:team/repo.git
 ```
 
 This is especially useful when all your repositories are on the same hosting service.

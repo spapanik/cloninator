@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 - Changed clone progress messages to use 🟡 while work is in progress and 🟢
   only after cloning, remote setup, and post-checkout commands all succeed
+- Changed `generate` output filenames to start with `new_repos_`, or the
+  repository group name when using `--split-groups`
 
 ### Fixed
 

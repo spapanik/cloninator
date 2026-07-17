@@ -33,7 +33,7 @@ A prefix to prepend to all remote URLs in the configuration group.
 myrepo:
     /remotes:
         - name: origin
-          url: user/repo.git  # Becomes git@github.com:user/repo.git
+          url: user/repo.git # Becomes git@github.com:user/repo.git
 ```
 
 **Type**: String
@@ -72,15 +72,16 @@ List of Git remotes for the repository.
 **Type**: List of objects
 **Required**: Yes
 **Constraints**:
+
 - Must be present and non-empty
 - Each remote must have both `name` and `url` fields
 
 #### Remote Object Properties
 
-| Property | Type   | Required | Description                |
-|----------|--------|----------|----------------------------|
-| `name`   | String | Yes      | Name of the remote         |
-| `url`    | String | Yes      | URL of the remote          |
+| Property | Type   | Required | Description        |
+| -------- | ------ | -------- | ------------------ |
+| `name`   | String | Yes      | Name of the remote |
+| `url`    | String | Yes      | URL of the remote  |
 
 **Note**: The first remote in the list is used as the initial clone origin. Additional remotes are added after cloning.
 
@@ -102,6 +103,7 @@ List of shell commands to execute after cloning the repository.
 **Security Note**: Commands run with `shell=True`. Only include trusted commands.
 
 **Common use cases**:
+
 - Installing dependencies (`pip install`, `npm install`, `bundle install`)
 - Setting up virtual environments
 - Running build scripts
@@ -209,13 +211,16 @@ When multiple configuration files exist:
 ### Common Errors
 
 **"Missing required field: /remotes"**
+
 - Ensure every repository has a `/remotes` key with at least one remote
 
 **"Invalid remote configuration"**
+
 - Check that each remote has both `name` and `url` fields
 - Verify YAML syntax
 
 **"Directory already exists"**
+
 - Cloninator skips existing directories
 - Remove the directory if you want to reclone
 
@@ -228,6 +233,7 @@ cloninator clone -vvv
 ```
 
 This shows:
+
 - Which configuration files are being loaded
 - Validation errors with specific line numbers
 - Full tracebacks for unexpected errors

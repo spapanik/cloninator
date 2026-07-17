@@ -12,11 +12,11 @@ cloninator <command> [options]
 
 These options work with any command:
 
-| Option            | Description                          |
-|-------------------|--------------------------------------|
-| `-v, --verbose`   | Increase verbosity (can be stacked)  |
-| `--version`       | Print version number and exit        |
-| `-h, --help`      | Show help message and exit           |
+| Option          | Description                         |
+| --------------- | ----------------------------------- |
+| `-v, --verbose` | Increase verbosity (can be stacked) |
+| `--version`     | Print version number and exit       |
+| `-h, --help`    | Show help message and exit          |
 
 ### Verbosity Levels
 
@@ -39,9 +39,9 @@ cloninator clone [-v]
 
 **Options**:
 
-| Option          | Description                         |
-|-----------------|-------------------------------------|
-| `-v, --verbose` | Increase verbosity level            |
+| Option          | Description              |
+| --------------- | ------------------------ |
+| `-v, --verbose` | Increase verbosity level |
 
 **Exit Codes**:
 
@@ -87,16 +87,18 @@ cloninator generate [-v]
 
 **Options**:
 
-| Option          | Description                         |
-|-----------------|-------------------------------------|
-| `-v, --verbose` | Increase verbosity level            |
+| Option          | Description              |
+| --------------- | ------------------------ |
+| `-v, --verbose` | Increase verbosity level |
 
 **Exit Codes**:
 
 - `0`: Success
 - `1`: Error
 
-**Output**: Creates a `repos.yaml` file in the current directory with discovered repositories.
+**Output**: Creates a
+`~/.config/cloninator/config.yaml.d/new_repos_<random>.yaml` file containing the
+discovered repositories.
 
 **Examples**:
 
@@ -112,8 +114,11 @@ cloninator generate -v
 
 - Only discovers repositories under the configured `/root` directory
 - Compares against existing config to find missing repos
-- Output must be manually merged into main configuration
+- Generated files are loaded automatically as split configuration
 - Does not capture `/post_checkout` commands (these must be added manually)
+- Without `--split-groups`, the output filename starts with `new_repos_`
+- With `--split-groups`, each output filename starts with its repository group
+  name (for example, `all_new_repos_<random>.yaml`)
 
 ## Configuration Files
 
@@ -126,9 +131,9 @@ All YAML files are automatically merged. See [Configuration Reference](configura
 
 ## Environment Variables
 
-| Variable              | Description                              |
-|-----------------------|------------------------------------------|
-| `HOME`                | User's home directory (for config path)  |
+| Variable | Description                             |
+| -------- | --------------------------------------- |
+| `HOME`   | User's home directory (for config path) |
 
 Configuration paths support environment variable expansion in YAML files.
 
@@ -152,9 +157,9 @@ cloninator clone
 cloninator generate
 
 # Review generated config
-cat repos.yaml
+cat ~/.config/cloninator/config.yaml.d/new_repos_*.yaml
 
-# Merge into main config, then clone again
+# The generated split config is loaded automatically; clone again
 cloninator clone
 ```
 

@@ -81,6 +81,7 @@ class Generate(BaseSubcommand):
             with NamedTemporaryFile(
                 mode="w",
                 dir=OVERRIDE_DIR,
+                prefix="new_repos_",
                 suffix=CONF_SUFFIX,
                 delete=False,
             ) as f:
@@ -92,6 +93,7 @@ class Generate(BaseSubcommand):
                 with NamedTemporaryFile(
                     mode="w",
                     dir=OVERRIDE_DIR,
+                    prefix=f"{group_name}_",
                     suffix=CONF_SUFFIX,
                     delete=False,
                 ) as f:

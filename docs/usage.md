@@ -85,8 +85,10 @@ cloninator generate [-v]
 - Scans the configured root directory for `.git` directories
 - Extracts remote information using git config
 - Compares against existing config to find missing repos
-- Outputs `repos.yaml` file with nested directory structure
-- **Note:** You must manually merge the output into your main config
+- Outputs `new_repos_<random>.yaml` in
+  `~/.config/cloninator/config.yaml.d/` with nested directory structure
+- With `--split-groups`, prefixes each filename with its repository group name
+- Generated files are loaded automatically as split configuration
 
 **Example workflow:**
 
@@ -95,9 +97,7 @@ cloninator generate [-v]
 cloninator generate
 
 # Review the output
-cat repos.yaml
-
-# Manually merge into ~/.config/cloninator/config.yaml
+cat ~/.config/cloninator/config.yaml.d/new_repos_*.yaml
 ```
 
 ## Configuration Reference
@@ -281,9 +281,8 @@ EOF
 # 2. Generate config for existing repos
 cloninator generate
 
-# 3. Review and merge
-cat repos.yaml
-# Manually add to config.yaml
+# 3. Review the generated split config
+cat ~/.config/cloninator/config.yaml.d/new_repos_*.yaml
 ```
 
 ### Add New Repository

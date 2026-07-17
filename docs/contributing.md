@@ -26,6 +26,7 @@ Before creating bug reports, please check existing issues to avoid duplicates. W
 Cloninator fails to clone repositories when using /prefix with SSH URLs.
 
 **To Reproduce**
+
 1. Create config with /prefix: "git@github.com:"
 2. Run cloninator clone
 3. See error: "Invalid URL format"
@@ -34,6 +35,7 @@ Cloninator fails to clone repositories when using /prefix with SSH URLs.
 Repository should clone successfully with prefixed URL.
 
 **Environment**
+
 - OS: macOS 14.0
 - Python: 3.13
 - cloninator: 0.1.0
@@ -52,22 +54,22 @@ Feature suggestions are welcome! Please include:
 
 1. **Fork** the repository
 2. **Create a branch** for your feature or fix
-   ```bash
-   git checkout -b feature/your-feature-name
-   # or
-   git checkout -b fix/issue-description
-   ```
+    ```bash
+    git checkout -b feature/your-feature-name
+    # or
+    git checkout -b fix/issue-description
+    ```
 3. **Make your changes** following the coding guidelines
 4. **Add tests** for new functionality
 5. **Ensure all tests pass**
-   ```bash
-   pytest
-   ```
+    ```bash
+    pytest
+    ```
 6. **Run linting**
-   ```bash
-   ruff check .
-   mypy src/
-   ```
+    ```bash
+    ruff check .
+    mypy src/
+    ```
 7. **Update documentation** if needed
 8. **Commit your changes** with clear, descriptive messages
 9. **Push** to your fork

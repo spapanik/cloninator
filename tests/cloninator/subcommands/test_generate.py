@@ -167,6 +167,7 @@ def test_generate_write_repos_write_single_file(tmp_path: Path) -> None:
 
     yaml_files = list(override_dir.glob("*.yaml"))
     assert len(yaml_files) == 1
+    assert yaml_files[0].name.startswith("new_repos_")
 
 
 def test_generate_write_repos_write_separate_files_per_group(tmp_path: Path) -> None:
@@ -193,6 +194,8 @@ def test_generate_write_repos_write_separate_files_per_group(tmp_path: Path) -> 
 
     yaml_files = list(override_dir.glob("*.yaml"))
     assert len(yaml_files) == 2
+    assert len(list(override_dir.glob("group1_*.yaml"))) == 1
+    assert len(list(override_dir.glob("group2_*.yaml"))) == 1
 
 
 def test_generate_run_no_missing_repos() -> None:

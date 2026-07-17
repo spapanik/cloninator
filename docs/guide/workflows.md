@@ -42,14 +42,13 @@ EOF
 cloninator generate
 
 # 3. Review the generated output
-cat repos.yaml
+cat ~/.config/cloninator/config.yaml.d/new_repos_*.yaml
 
-# 4. Manually merge into your main config
-# Edit config.yaml and add the generated content
+# 4. Rename or edit the generated split config as needed
 ```
 
 !!! tip
-    The `generate` command only outputs missing repositories. Run it periodically to keep your config up to date.
+The `generate` command only outputs missing repositories. Run it periodically to keep your config up to date.
 
 ## Adding New Repositories
 
@@ -78,8 +77,8 @@ git remote add upstream git@github.com:upstream/repo.git
 cloninator generate
 
 # 3. Review and merge changes
-cat repos.yaml
-# Manually update config.yaml with new remote information
+cat ~/.config/cloninator/config.yaml.d/new_repos_*.yaml
+# Rename or edit the generated split config as needed
 ```
 
 ## Managing Multiple Environments

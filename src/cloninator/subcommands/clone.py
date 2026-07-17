@@ -54,9 +54,7 @@ class Clone(BaseSubcommand):
         try:
             self.add_repo(repo)
         except Exception as error:
-            SGRString(
-                f"Failed to add repo {repo.path}: {error}", prefix="🔴 "
-            ).print()
+            SGRString(f"Failed to add repo {repo.path}: {error}", prefix="🔴 ").print()
             raise SystemExit(1) from error
 
     def run(self) -> None:
