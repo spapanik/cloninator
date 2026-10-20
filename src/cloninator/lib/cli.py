@@ -10,7 +10,7 @@ from cloninator.__version__ import __version__
 from cloninator.lib.utils import RepoGroupKey
 
 if TYPE_CHECKING:
-    from typing_extensions import Self  # upgrade: py3.10: import from typing
+    from typing import Self  # upgrade: py3.10: import from typing
 
 sys.tracebacklimit = 0
 

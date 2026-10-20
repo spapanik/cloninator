@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Removed
+
+- Dropped support for python 3.10
+
 ### Changed
 
 - Changed clone progress messages to use 🟡 while work is in progress and 🟢

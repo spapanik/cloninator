@@ -2,14 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
 
 from dj_settings import ConfigParser
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
-
-    from typing_extensions import Self  # upgrade: py3.10: import from typing
 
     from cloninator.lib.type_defs import RepoData
 
@@ -91,7 +89,7 @@ def _get_data() -> dict[str, Any]:  # type: ignore[explicit-any]
         CONF_DIR.mkdir(parents=True)
     if not OVERRIDE_DIR.exists():
         OVERRIDE_DIR.mkdir()
-    parsed_config = ConfigParser([CONF])
+    parsed_config = ConfigParser(CONF)
     try:
         return parsed_config.data
     except AttributeError:

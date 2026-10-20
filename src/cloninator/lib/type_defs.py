@@ -1,8 +1,10 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, TypedDict
-
-from typing_extensions import Required  # upgrade: py3.10: import from typing
+from typing import (
+    TYPE_CHECKING,
+    Required,  # upgrade: py3.10: import from typing
+    TypedDict,
+)
 
 if TYPE_CHECKING:
     from cloninator.lib.utils import Repo, RepoGroupKey
