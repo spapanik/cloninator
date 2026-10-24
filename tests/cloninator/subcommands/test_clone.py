@@ -289,3 +289,34 @@ def test_clone_run_verbosity_passed(mock_get_config: mock.MagicMock) -> None:
 
     with mock.patch.object(clone, "add_repo"):
         clone.run()
+
+
+@pytest.mark.parametrize("exists", [False, True])
+def test_clone_dry_run(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], exists: bool
+) -> None:
+    repo_path = tmp_path / "nested" / "repo"
+    if exists:
+        repo_path.mkdir(parents=True)
+    repo = Repo(
+        path=repo_path,
+        remotes=(
+            Remote(name="source", url="origin-url"),
+            Remote(name="upstream", url="upstream-url"),
+        ),
+        post_checkout=("touch marker",),
+    )
+    with mock.patch("cloninator.subcommands.clone.run") as mock_run:
+        Clone(verbosity=0, dry_run=True).add_repo(repo)
+    mock_run.assert_not_called()
+    assert repo_path.exists() is exists
+    assert repo_path.parent.exists() is exists
+    output = capsys.readouterr().out
+    if exists:
+        assert "already exists, skipping" in output
+        assert "Would" not in output
+    else:
+        assert f"Would clone origin-url at {repo_path} with origin source" in output
+        assert "Would add remote upstream at upstream-url" in output
+        assert "Would run post-checkout command 'touch marker'" in output
+        assert "Cloned" not in output

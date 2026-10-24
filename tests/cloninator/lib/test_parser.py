@@ -141,3 +141,21 @@ def test_clone_with_high_verbosity() -> None:
         args = parse_args()
     assert args.clone_subcommand is not None
     assert args.verbosity == 20
+
+
+@pytest.mark.parametrize(
+    ("subcommand", "extra_args"),
+    [("clone", []), ("generate", ["-r", "group::/repos", "-s"])],
+)
+@pytest.mark.parametrize("flag", ["--dry-run", "-n", None])
+def test_dry_run_flags(
+    subcommand: str, extra_args: list[str], flag: str | None
+) -> None:
+    argv = ["cloninator", subcommand, *extra_args]
+    if flag is not None:
+        argv.append(flag)
+    with mock.patch("sys.argv", argv):
+        args = parse_args()
+    command = args.clone_subcommand or args.generate_subcommand
+    assert command is not None
+    assert command.dry_run is (flag is not None)

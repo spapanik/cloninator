@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from subprocess import run
 from tempfile import NamedTemporaryFile
 from typing import TYPE_CHECKING
@@ -24,7 +25,7 @@ if TYPE_CHECKING:
 
 
 class Generate(BaseSubcommand):
-    __slots__ = ("repo_groups", "split_groups")
+    __slots__ = ("dry_run", "repo_groups", "split_groups")
 
     def __init__(
         self,
@@ -32,10 +33,12 @@ class Generate(BaseSubcommand):
         *,
         repo_groups: tuple[RepoGroupKey, ...],
         split_groups: bool,
+        dry_run: bool = False,
     ) -> None:
         super().__init__(verbosity=verbosity)
         self.repo_groups = repo_groups
         self.split_groups = split_groups
+        self.dry_run = dry_run
 
     @staticmethod
     def _get_repos(repo_group: RepoGroupKey) -> Iterator[RepoGroupData]:
@@ -76,6 +79,18 @@ class Generate(BaseSubcommand):
         yaml.default_flow_style = False
         yaml.indent(mapping=2, sequence=4, offset=2)
 
+        if self.dry_run:
+            SGRString(
+                "Dry run: proposed config (no files written):", prefix="🔵 "
+            ).print()
+            if self.split_groups:
+                yaml.explicit_start = True
+                for group_name, group_data in repos_dict.items():
+                    yaml.dump({group_name: group_data}, sys.stdout)
+            else:
+                yaml.dump(repos_dict, sys.stdout)
+            return
+
         if not self.split_groups:
             # Write all repos to a single file
             with NamedTemporaryFile(
@@ -104,7 +119,7 @@ class Generate(BaseSubcommand):
                     ).print()
 
     def run(self) -> None:
-        config = get_config()
+        config = get_config(dry_run=self.dry_run)
         repos = {repo.path for repo in config.repos}
 
         missing_repos = [

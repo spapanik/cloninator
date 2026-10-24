@@ -71,6 +71,9 @@ status code `1`.
 - **`clone`**: Clone all repositories from configuration
 - **`generate`**: Scan existing repos and generate configuration
 
+Both commands accept `--dry-run` (`-n`) to preview changes without writing files.
+`clone -n` lists planned actions; `generate -n -r NAME::PATH` prints proposed YAML.
+
 See the [Usage Guide](usage.md) for detailed examples and workflows.
 
 ## Documentation

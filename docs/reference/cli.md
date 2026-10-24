@@ -32,7 +32,7 @@ These options work with any command:
 Clone all repositories from configuration.
 
 ```bash
-cloninator clone [-v]
+cloninator clone [-v] [-n]
 ```
 
 **Description**: Reads configuration and clones all defined repositories. Skips repositories that already exist.
@@ -42,6 +42,7 @@ cloninator clone [-v]
 | Option          | Description              |
 | --------------- | ------------------------ |
 | `-v, --verbose` | Increase verbosity level |
+| `-n, --dry-run` | Preview cloning, remotes, and post-checkout commands without changing files or running commands |
 
 **Exit Codes**:
 
@@ -80,7 +81,7 @@ processing the remaining repositories.
 Scan existing repositories and generate configuration.
 
 ```bash
-cloninator generate [-v]
+cloninator generate -r NAME::PATH [NAME::PATH ...] [-v] [-s] [-n]
 ```
 
 **Description**: Scans the configured root directory for Git repositories and generates a configuration file.
@@ -90,6 +91,9 @@ cloninator generate [-v]
 | Option          | Description              |
 | --------------- | ------------------------ |
 | `-v, --verbose` | Increase verbosity level |
+| `-r, --repo-groups` | Groups to scan as `NAME::PATH` (required) |
+| `-s, --split-groups` | Save each group to a separate file |
+| `-n, --dry-run` | Print proposed YAML without creating config files or directories; with `-s`, print separate YAML documents |
 
 **Exit Codes**:
 

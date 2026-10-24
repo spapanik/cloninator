@@ -84,10 +84,10 @@ class Config:
             yield from group.repos
 
 
-def _get_data() -> dict[str, Any]:  # type: ignore[explicit-any]
-    if not CONF_DIR.exists():
+def _get_data(*, dry_run: bool = False) -> dict[str, Any]:  # type: ignore[explicit-any]
+    if not dry_run and not CONF_DIR.exists():
         CONF_DIR.mkdir(parents=True)
-    if not OVERRIDE_DIR.exists():
+    if not dry_run and not OVERRIDE_DIR.exists():
         OVERRIDE_DIR.mkdir()
     parsed_config = ConfigParser(CONF)
     try:
@@ -113,8 +113,8 @@ def _get_raw_repos(group_data: dict[str, RepoData]) -> Iterator[Repo]:
         )
 
 
-def get_config() -> Config:
-    data = _get_data()
+def get_config(*, dry_run: bool = False) -> Config:
+    data = _get_data(dry_run=dry_run)
     repos = [
         RepoGroup(
             name=name,

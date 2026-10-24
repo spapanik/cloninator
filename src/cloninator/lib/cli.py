@@ -17,15 +17,18 @@ sys.tracebacklimit = 0
 
 @dataclass(frozen=True, slots=True)
 class CloneCliArgs:
+    dry_run: bool = False
+
     @classmethod
-    def from_args(cls, _args: Namespace, /) -> Self:
-        return cls()
+    def from_args(cls, args: Namespace, /) -> Self:
+        return cls(dry_run=args.dry_run)
 
 
 @dataclass(frozen=True, slots=True)
 class GenerateCliArgs:
     repo_groups: tuple[RepoGroupKey, ...]
     split_groups: bool
+    dry_run: bool = False
 
     @classmethod
     def from_args(cls, args: Namespace, /) -> Self:
@@ -35,7 +38,11 @@ class GenerateCliArgs:
             repo_groups.append(
                 RepoGroupKey(name=name, root=Path(root).expanduser().absolute())
             )
-        return cls(repo_groups=tuple(repo_groups), split_groups=args.split_groups)
+        return cls(
+            repo_groups=tuple(repo_groups),
+            split_groups=args.split_groups,
+            dry_run=args.dry_run,
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -80,6 +87,13 @@ def parse_args() -> CliArgs:
         default=0,
         dest="verbosity",
         help="increase the level of verbosity",
+    )
+
+    parent_parser.add_argument(
+        "-n",
+        "--dry-run",
+        action="store_true",
+        help="preview changes without modifying files or running checkout commands",
     )
 
     subparsers = parser.add_subparsers(dest="subcommand", required=True)

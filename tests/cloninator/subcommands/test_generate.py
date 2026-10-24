@@ -442,3 +442,47 @@ def test_generate_run_with_post_checkout(tmp_path: Path) -> None:
     assert repo_key in group_data
     assert "/post_checkout" in group_data[repo_key]
     assert group_data[repo_key]["/post_checkout"] == ["make build", "pytest"]
+
+
+@pytest.mark.parametrize("split_groups", [False, True])
+def test_generate_dry_run(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], split_groups: bool
+) -> None:
+    keys = (
+        RepoGroupKey(name="first", root=tmp_path / "first"),
+        RepoGroupKey(name="second", root=tmp_path / "second"),
+    )
+    for key in keys:
+        (key.root / "repo" / ".git").mkdir(parents=True)
+    override_dir = tmp_path / "config.yaml.d"
+    with (
+        mock.patch(
+            "cloninator.subcommands.generate.get_config", return_value=Config(groups=())
+        ) as mock_config,
+        mock.patch("cloninator.subcommands.generate.OVERRIDE_DIR", override_dir),
+        mock.patch("cloninator.subcommands.generate.NamedTemporaryFile") as mock_file,
+        mock.patch(
+            "cloninator.subcommands.generate.run",
+            return_value=CompletedProcess(
+                args=[],
+                returncode=0,
+                stdout=b"remote.origin.url origin-url\n",
+                stderr=b"",
+            ),
+        ) as mock_run,
+    ):
+        Generate(
+            verbosity=0, repo_groups=keys, split_groups=split_groups, dry_run=True
+        ).run()
+    mock_config.assert_called_once_with(dry_run=True)
+    mock_file.assert_not_called()
+    assert not override_dir.exists()
+    assert mock_run.call_count == 2
+    for call in mock_run.call_args_list:
+        assert call.args[0][-3:] == ["config", "--get-regex", r"remote\..*\.url"]
+    output = capsys.readouterr().out
+    assert "Dry run" in output
+    assert "first:" in output
+    assert "second:" in output
+    assert "url: origin-url" in output
+    assert output.count("---\n") == (2 if split_groups else 0)

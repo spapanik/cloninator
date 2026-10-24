@@ -8,11 +8,32 @@ from cloninator.subcommands.base import BaseSubcommand
 
 
 class Clone(BaseSubcommand):
-    @staticmethod
-    def add_repo(repo: Repo) -> None:
+    def __init__(self, verbosity: int, *, dry_run: bool = False) -> None:
+        super().__init__(verbosity=verbosity)
+        self.dry_run = dry_run
+
+    def add_repo(self, repo: Repo) -> None:
         path = repo.path
         if path.exists():
             SGRString(f"Repo {path} already exists, skipping...", prefix="🔵 ").print()
+            return
+
+        if self.dry_run:
+            origin = repo.remotes[0]
+            SGRString(
+                f"Would clone {origin.url} at {path} with origin {origin.name}.",
+                prefix="🔵 ",
+            ).print()
+            for remote in repo.remotes[1:]:
+                SGRString(
+                    f"Would add remote {remote.name} at {remote.url} for {path}.",
+                    prefix="🔵 ",
+                ).print()
+            for command in repo.post_checkout:
+                SGRString(
+                    f"Would run post-checkout command {command!r} for {path}.",
+                    prefix="🔵 ",
+                ).print()
             return
 
         path.mkdir(parents=True)
@@ -58,6 +79,6 @@ class Clone(BaseSubcommand):
             raise SystemExit(1) from error
 
     def run(self) -> None:
-        config = get_config()
+        config = get_config(dry_run=self.dry_run)
         for repo in config.repos:
             self._add_repo_or_exit(repo)

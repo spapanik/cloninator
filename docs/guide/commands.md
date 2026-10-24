@@ -9,12 +9,13 @@ Clone all repositories defined in your configuration.
 ### Usage
 
 ```bash
-cloninator clone [-v]
+cloninator clone [-v] [-n]
 ```
 
 ### Options
 
 - `-v, --verbose`: Increase verbosity (can be stacked: `-vv`, `-vvv`)
+- `-n, --dry-run`: Preview cloning, remote setup, and post-checkout commands without creating directories or running commands
 
 ### Behavior
 
@@ -59,12 +60,15 @@ Scan existing cloned repositories and generate configuration.
 ### Usage
 
 ```bash
-cloninator generate [-v]
+cloninator generate -r NAME::PATH [NAME::PATH ...] [-v] [-s] [-n]
 ```
 
 ### Options
 
 - `-v, --verbose`: Increase verbosity (can be stacked: `-vv`, `-vvv`)
+- `-r, --repo-groups`: Repository groups to scan, as `NAME::PATH` (required)
+- `-s, --split-groups`: Save each group to a separate file
+- `-n, --dry-run`: Print proposed YAML without creating config files or directories; with `-s`, print a separate YAML document per group
 
 ### Behavior
 

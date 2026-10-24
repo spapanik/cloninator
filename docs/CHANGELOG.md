@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog], and this project adheres to [Semantic
 
 ## [Unreleased]
 
+### Added
+
+- Added `--dry-run` (`-n`) to `clone` and `generate` to preview changes without
+  modifying files or running post-checkout commands
+
 ### Removed
 
 - Dropped support for python 3.10
